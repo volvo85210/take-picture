@@ -117,17 +117,37 @@ public class MainActivity extends Activity  implements OnClickListener {
                 URLConn.setRequestProperty("Connection", "Keep-Alive");///////////////////////**********
 	            
 	            URLConn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
-	            
-	            
+	        	DataOutputStream dataOS = new DataOutputStream(URLConn.getOutputStream());//開OUTPUT串流	            
+
+	        	////////////////////寫FILE////////////////DOWN
+	        	dataOS.writeBytes(HYPHENS+BOUNDARY+CRLF);		// 寫--==================================
+	        	dataOS.writeBytes("Content-Disposition:from-data; name=\"name\""+CRLF);
+	        	dataOS.writeBytes(CRLF);
+	        	//String t =URLEncoder.encode("王", "utf-8");
+	        	
+	        	dataOS.writeBytes(URLEncoder.encode("王", "utf-8")+CRLF);
+	        	
+	        	
+	        	dataOS.writeBytes(HYPHENS+BOUNDARY+CRLF);		// 寫--==================================
+	        	dataOS.writeBytes("Content-Disposition:from-data; name=\"phone\""+CRLF);
+	        	dataOS.writeBytes(CRLF);
+	        	dataOS.writeBytes(URLEncoder.encode("0933394940", "utf-8")+CRLF);
+	        	
+	        	dataOS.writeBytes(HYPHENS+BOUNDARY+CRLF);		// 寫--==================================
+	        	dataOS.writeBytes("Content-Disposition:from-data; name=\"address\""+CRLF);
+	        	dataOS.writeBytes(CRLF);
+	        	dataOS.writeBytes(URLEncoder.encode("屏東縣", "big5")+CRLF);
+	        	
+	        	dataOS.writeBytes(HYPHENS+BOUNDARY+CRLF);		// 寫--==================================
+	        	dataOS.writeBytes("Content-Disposition:from-data; name=\"gps\""+CRLF);
+	        	dataOS.writeBytes(CRLF);
+	        	dataOS.writeBytes(URLEncoder.encode("22.646066,120.328876", "utf-8")+CRLF);
+	        	dataOS.writeBytes(CRLF);
+	        	
+	        	dataOS.writeBytes(HYPHENS+BOUNDARY+CRLF);		// 寫--==================================
 	            String strContentDisposition = "Content-Disposition: form-data; name=\"file\"; filename=\"temp.jpeg\"";
 	            String strContentType = "Content-Type: image/jpeg";
 	            
-	        	DataOutputStream dataOS = new DataOutputStream(URLConn.getOutputStream());//開OUTPUT串流
-	        	 
-	        	
-	        	////////////////////寫FILE////////////////DOWN
-	        	dataOS.writeBytes(HYPHENS+BOUNDARY+CRLF);		// 寫--==================================
-	        	           	
 	        	dataOS.writeBytes(strContentDisposition+CRLF);	// 寫(Disposition)
 	        	dataOS.writeBytes(strContentType+CRLF);			// 寫(Content Type)
 	        	dataOS.writeBytes(CRLF);	
@@ -144,19 +164,21 @@ public class MainActivity extends Activity  implements OnClickListener {
 	        	}
 	        	//////寫照片//
 	        	
-	        	dataOS.writeBytes(CRLF);	
-	        	dataOS.writeBytes(HYPHENS+BOUNDARY+HYPHENS);	// (結束)寫--==================================--		
-	        	fileInputStream.close();
-	        	////////////////寫FILE////////////////////UPER
+	        	//dataOS.writeBytes(CRLF+HYPHENS+BOUNDARY+CRLF);// 寫--==================================
+	        	//String content = URLEncoder.encode("name", "UTF-8"); 
+	        	//dataOS.writeBytes(content+CRLF);//寫出資料 
 	        	
+	        	
+	        	dataOS.writeBytes(CRLF+HYPHENS+BOUNDARY+HYPHENS+CRLF);	// (結束)寫--==================================--		
+	        	fileInputStream.close();
 	        	
 	        	
 	        //	URLConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");//單獨POST用 不傳FILE之格式 但不知為什麼出錯了
 	            URLConn.connect();  
 	          
-	            String content = URLEncoder.encode("name", "UTF-8") + "=" + URLEncoder.encode("gggbbb123", "UTF-8");//傳資料 還沒做完   目前能傳FILE但PHP收不到傳資料
-		     //       content+= URLEncoder.encode("phone", "UTF-8") + "=" + URLEncoder.encode("0988123123", "UTF-8")+"\r\n";
-		        dataOS.writeBytes(content);//寫出資料
+	            
+		     // content+= URLEncoder.encode("phone", "UTF-8") + "=" + URLEncoder.encode("0988123123", "UTF-8")+"\r\n";
+		        
 	       
 	            dataOS.flush();
 	            dataOS.close(); // flush and close
